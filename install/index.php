@@ -578,12 +578,19 @@ class InstallRequirements {
     $hostParts = explode(':', $host);
     if (count($hostParts) > 1 && strrpos($host, ']') !== strlen($host) - 1) {
       $port = array_pop($hostParts);
+      if (!is_numeric($port)) {
+          $socket = $port;
+          $port = NULL;
+      } else {
+          $socket = NULL;
+      }
       $host = implode(':', $hostParts);
     }
     else {
       $port = NULL;
+      $socket = NULL;
     }
-    $conn = @mysqli_connect($host, $username, $password, $database, $port);
+    $conn = @mysqli_connect($host, $username, $password, $database, $port, $socket);
     return $conn;
   }
 

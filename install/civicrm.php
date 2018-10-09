@@ -99,8 +99,11 @@ function civicrm_main(&$config) {
   $parts = explode(':', $config['mysql']['server']);
   if (empty($parts[1])) {
     $parts[1] = 3306;
+    $config['mysql']['server'] = implode(':', $parts);
+  } elseif (!is_numeric($parts[1])) {
+      $parts[1] = "(" . $parts[1] . ")";
+      $config['mysql']['server'] = "unix" . $parts[1];
   }
-  $config['mysql']['server'] = implode(':', $parts);
 
   $dsn = "mysql://{$config['mysql']['username']}:{$config['mysql']['password']}@{$config['mysql']['server']}/{$config['mysql']['database']}?new_link=true";
   civicrm_source($dsn, $sqlPath . DIRECTORY_SEPARATOR . 'civicrm.mysql');
